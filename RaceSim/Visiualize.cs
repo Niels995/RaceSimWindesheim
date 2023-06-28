@@ -27,16 +27,54 @@ namespace RaceSim
         }
         public static int[] FindStartXY(Track track) {
             int[] coords = new int[2];
+            coords[0] = 1;
+            coords[1] = 1;
 
             int Compass = 1; // Used for flipping
 
             foreach (Section sec in track.Sections) {
-                //if (sec.SectionType == SectionTypes.StartGrid || sec.SectionType == SectionTypes.Straight || sec.SectionType == SectionTypes.Finish) {
-                coords = SwitchCompass(sec, coords, Compass);
-                //}
+                if (sec.SectionType == SectionTypes.StartGrid || sec.SectionType == SectionTypes.Straight || sec.SectionType == SectionTypes.Finish) {
+                    switch (Compass)
+                    {
+                        case 1:
+                            coords[0] += 1;
+                            SetXYCompass(sec, coords, Compass);
+                            break;
+                        case 2:
+                            coords[1] += -1;
+                            SetXYCompass(sec, coords, Compass);
+                            break;
+                        case 3:
+                            coords[0] += -1;
+                            SetXYCompass(sec, coords, Compass);
+                            break;
+                        case 4:
+                            coords[1] += 1;
+                            SetXYCompass(sec, coords, Compass);
+                            break;
+                    }
+                }
                 if (sec.SectionType == SectionTypes.RightCorner || sec.SectionType == SectionTypes.LeftCorner)
                 {
-                    //SwitchCompass(sec, coords, Compass);
+                    switch (Compass)
+                    {
+                        case 1:
+                            coords[0] += 1;
+                            SetXYCompass(sec, coords, Compass);
+                            break;
+                        case 2:
+                            coords[1] += 1;
+                            SetXYCompass(sec, coords, Compass);
+                            break;
+                        case 3:
+                            coords[0] += -1;
+                            SetXYCompass(sec, coords, Compass);
+                            break;
+                        case 4:
+                            coords[1] += -1;
+                            SetXYCompass(sec, coords, Compass);
+                            break;
+                    }
                     if (sec.SectionType == SectionTypes.RightCorner)
                     {
                         Compass += 1;
@@ -49,28 +87,6 @@ namespace RaceSim
                 }
             }
 
-            return coords;
-        }
-        public static int[] SwitchCompass(Section sec, int[] coords, int Compass) {
-            switch (Compass)
-            {
-                case 1:
-                    coords[0] += 1;
-                    SetXYCompass(sec, coords, Compass);
-                    break;
-                case 2:
-                    coords[1] += 1;
-                    SetXYCompass(sec, coords, Compass);
-                    break;
-                case 3:
-                    coords[0] += -1;
-                    SetXYCompass(sec, coords, Compass);
-                    break;
-                case 4:
-                    coords[1] += -1;
-                    SetXYCompass(sec, coords, Compass);
-                    break;
-            }
             return coords;
         }
         public static void SetXYCompass(Section sec, int[] coords, int compass) {
