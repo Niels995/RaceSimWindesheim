@@ -9,10 +9,18 @@ Data.NextRace();
 
 Console.WriteLine(Data.CurrentRace.Track.Name);
 
-Visiualize.DrawTrack(Data.CurrentRace.Track);
+Visiualize.Initialize(Data.CurrentRace);
+
+Data.CurrentRace.DriversChanged += (sender, e) =>
+{
+    Visiualize.DrawTrack(e.track);
+};
 
 
-
+Data.CurrentRace.DriversFinished += (sender, e) =>
+{
+    Visiualize.EventHandlerDriversFinished();
+};
 
 
 for (; ; )
