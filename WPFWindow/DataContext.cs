@@ -7,24 +7,25 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace WPFWindow
 {
     public class DataContext : INotifyPropertyChanged
     {
-
-        public ObservableCollection<CompetitionRow> CompetitionStats { get; set; } = new();
-        public ObservableCollection<DriverRow> RaceDrivers { get; set; } = new();
-        public ObservableCollection<DriverInfo> RaceDriversDriverInfo { get; set; } = new();
+        public ObservableCollection<RowCompetitions> CompetitionStats { get; set; } = new();
+        public ObservableCollection<RowRacer> RaceDrivers { get; set; } = new();
+        public ObservableCollection<CarPerformance> RaceDriversDriverInfo { get; set; } = new();
         public DataContext()
         {
             Data.CurrentRace.DriversChanged += OnDriverChanged;
+            
+            Property1 = Data.CurrentRace.Track.Name;
+            OnPropertyChanged(nameof(Property1));
         }
 
         public Competition competition = Data.Comp1;
         public string Property1 { get; set; }
-
-        public int Property2 { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -37,6 +38,9 @@ namespace WPFWindow
             Data.CurrentRace.DriversChanged += OnDriverChanged;
             UpdateCompetitionInfo();
             UpdateRaceDrivers();
+
+            Property1 = Data.CurrentRace.Track.Name;
+            OnPropertyChanged(nameof(Property1));
         }
 
         private void OnDriverChanged(object sender, EventArgs e)
@@ -46,16 +50,12 @@ namespace WPFWindow
             UpdateRaceDriverInfo();
             UpdateCompetitionInfo();
             UpdateRaceDrivers();
-
-
-            Property1 = Data.CurrentRace.Track.Name;
-            OnPropertyChanged(nameof(Property1));
         }
 
         private void UpdateCompetitionInfo()
         {
             CompetitionStats = new();
-            CompetitionStats.Add(new CompetitionRow(Data.CurrentRace.Track.Name, Data.CurrentRace.Rounds, competition.Participants.Count(), Data.CurrentRace.Track.Sections.Count()));
+            CompetitionStats.Add(new RowCompetitions(Data.CurrentRace.Track.Name, Data.CurrentRace.Rounds, competition.Participants.Count(), Data.CurrentRace.Track.Sections.Count()));
             OnPropertyChanged(nameof(CompetitionStats));
         }
         private void UpdateRaceDriverInfo()
@@ -63,7 +63,7 @@ namespace WPFWindow
             RaceDriversDriverInfo = new();
             competition.Participants.ForEach(i =>
             {
-                RaceDriversDriverInfo.Add(new DriverInfo(i.Lapped, i.Quality, i.Performance, i.Speed, i.IsBroken));
+                RaceDriversDriverInfo.Add(new CarPerformance(i.Lapped, i.Quality, i.Performance, i.Speed, i.IsBroken));
             });
             OnPropertyChanged(nameof(RaceDriversDriverInfo));
         }
@@ -72,30 +72,30 @@ namespace WPFWindow
             RaceDrivers = new();
             competition.Participants.Where(s => Data.CurrentRace.Participants.Contains(s))
                 .ToList()
-                .ForEach(i => RaceDrivers.Add(new DriverRow(i.Name, i.Points, i.TeamColor.ToString())));
+                .ForEach(i => RaceDrivers.Add(new RowRacer(i.Name, i.Points, i.TeamColor.ToString())));
             OnPropertyChanged(nameof(RaceDrivers));
         }
     }
-    public class DriverRow
+    public class RowRacer
     {
         public string Name { get; set; }
         public int Points { get; set; }
         public string TeamColor { get; set; }
 
-        public DriverRow(string name, int points, string teamColor)
+        public RowRacer(string name, int points, string teamColor)
         {
             Name = name;
             Points = points;
             TeamColor = teamColor;
         }
     }
-    public class CompetitionRow
+    public class RowCompetitions
     {
         public string Name { get; set; }
         public int Laps { get; set; }
         public int TotalParticipants { get; set; }
         public int TrackLength { get; set; }
-        public CompetitionRow(string name, int laps, int totalParticipants, int trackLength)
+        public RowCompetitions(string name, int laps, int totalParticipants, int trackLength)
         {
             Name = name;
             Laps = laps;
@@ -103,7 +103,7 @@ namespace WPFWindow
             TrackLength = trackLength;
         }
     }
-    public class DriverInfo
+    public class CarPerformance
     {
         public int Laps { get; set; }
         public int Quality { get; set; }
@@ -111,7 +111,7 @@ namespace WPFWindow
         public int Speed { get; set; }
         public bool Broken { get; set; }
 
-        public DriverInfo(int lapCount, int quality, int performance, int speed, bool broken)
+        public CarPerformance(int lapCount, int quality, int performance, int speed, bool broken)
         {
             Laps = lapCount;
             Quality = quality;

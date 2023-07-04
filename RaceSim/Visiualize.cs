@@ -210,13 +210,6 @@ namespace RaceSim
             sec.Y = coords[1];
             sec.Compass = compass;
         }
-        public static int horizontal() { 
-            return 1; 
-        }
-        public static int Corner()
-        {
-            return 0;
-        }
 
         #region graphics
 

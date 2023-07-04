@@ -8,6 +8,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using static System.Collections.Specialized.BitVector32;
+using Section = Model.Section;
 using Timer = System.Timers.Timer;
 
 namespace Controller
@@ -43,6 +45,7 @@ namespace Controller
             }
             PlaceParticipants();
             MakeTimer();
+            AddPowerUp();
         }
         public void ResetParticipants() {
             foreach (IParticipant par in Participants) {
@@ -68,7 +71,14 @@ namespace Controller
             {
                 par.Moved = false;
                 if (_random.Next(3, par.Quality) >= 5) {
-                    par.IsBroken = true;
+                    if (par.PowerUp > 0)
+                    {
+                        par.PowerUp -= 1;
+                    }
+                    else
+                    {
+                        par.IsBroken = true;
+                    }
                 }
                 if (par.IsBroken && _random.Next(1, 8) <= 2) { 
                     par.IsBroken = false;
@@ -100,13 +110,6 @@ namespace Controller
                     }
                 }
                 UpdateRace?.Invoke(this, new EventArgs());
-                //if (UpdateRace?.GetInvocationList() != null)
-                //{
-                //    foreach (Delegate d in UpdateRace.GetInvocationList())
-                //    {
-                //        UpdateRace -= (EventHandler<EventArgs>)d;
-                //    }
-                //}
                 _timer?.Stop();
             }
         }
@@ -121,7 +124,7 @@ namespace Controller
             foreach (Section sec in _track.Sections) {
                 SectionData CurrentSectionData = GetSectionData(sec);
                 
-                if (CurrentSectionData.Left != null) {
+                if (CurrentSectionData.Left != null && CurrentSectionData.Left.Name != "@PowerUp") {
                     if (!CurrentSectionData.Left.IsBroken)
                     {
                         if (CurrentSectionData.DistanceLeft < 100)
@@ -167,12 +170,19 @@ namespace Controller
                 Section NextSection = Track.Sections.ElementAt(x + 1);
                 SectionData NextSectionData = GetSectionData(NextSection);
 
-                if (NextSectionData.Left == null)
+                if (NextSectionData.Left == null || NextSectionData.Left.Name == "@PowerUp")
                 {
+                    if (NextSectionData.Left != null) {
+                        if (NextSectionData.Left.Name == "@PowerUp")
+                        {
+                            par.PowerUp = 5;
+                        }
+                    } 
                     NextSectionData.Left = par;
                     par.Moved = true;
                     Place = true;
-                    if (sec.SectionType == SectionTypes.Finish) {
+                    if (sec.SectionType == SectionTypes.Finish)
+                    {
                         par.Lapped += 1;
                         Debug.WriteLine("Lapped" + par.Lapped);
                         if (par.Lapped == Rounds + 1)
@@ -186,15 +196,21 @@ namespace Controller
                                     _timer.Stop();
                                     break;
                                 }
-                                else {
+                                else
+                                {
                                     AllPlayersFinished = true;
                                 }
                             }
+
                             int PointsRewarded = 1;
                             foreach (IParticipant _participant in Participants)
                             {
-                                if (_participant.Lapped != Rounds + 1) { PointsRewarded++; }
+                                if (_participant.Lapped != Rounds + 1)
+                                {
+                                    PointsRewarded++;
+                                }
                             }
+
                             par.Points += PointsRewarded;
                         }
                     }
@@ -242,6 +258,7 @@ namespace Controller
                 }
             }
         }
+
         // Wordt wel getest in Race_Test.cs bij PlaceParticipants_ParticipantsOnTrack()
         public void PlaceParticipants()
         {
@@ -265,6 +282,25 @@ namespace Controller
                     if (_sections.Count() != 0)
                     {
                         CurrentSection = _sections.Pop();
+                    }
+                }
+            }
+        }
+        public void AddPowerUp()
+        {
+            bool PowerUp = true;
+            foreach (Section section in Track.Sections)
+            {
+                if (PowerUp)
+                {
+                    if (section.SectionType == SectionTypes.Straight)
+                    {
+                        if (_random.Next(1, Track.Sections.Count / 2) <= 2)
+                        {
+                            SectionData sc = GetSectionData(section);
+                            sc.Left = new Driver("@PowerUp", 10, new Car(10, 10, 10, false), TeamColors.Red);
+                            PowerUp = false;
+                        }
                     }
                 }
             }

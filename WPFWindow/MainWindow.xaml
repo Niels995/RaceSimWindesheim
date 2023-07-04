@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:WPFWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:DataContext/>
+    </Window.DataContext>
     <Grid>
         <DockPanel LastChildFill="False">
             <Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top">
@@ -16,6 +19,6 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <Label x:Name="Race_Name" HorizontalAlignment="Center" VerticalAlignment="Center" Content="PlaceHolder" />
+        <Label x:Name="Race_Name" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Property1}"/>
     </Grid>
 </Window>

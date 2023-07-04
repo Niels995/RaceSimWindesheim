@@ -22,5 +22,6 @@ namespace Model
         public TeamColors TeamColor { get; set; }
         public bool Moved { get; set; }
         public int Lapped { get; set; }
+        public int PowerUp { get; set; }
     }
 }

@@ -61,7 +61,6 @@ namespace WPFWindow
         private void OnDriversFinished(object sender, EventArgs e)
         {
             DataContext.DataContextReset();
-            Race_Name.Content = Data.CurrentRace.Track.Name;
         }
     }
 }
