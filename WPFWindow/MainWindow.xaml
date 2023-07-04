@@ -1,0 +1,21 @@
+﻿<Window x:Class="WPFWindow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <DockPanel LastChildFill="False">
+            <Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top">
+                <MenuItem Header="Menu">
+                    <Button Click="Not_Needed" Content="Open Comp gegevens"/>
+                    <Button Click="Open_Data" Content="Open Race gegevens"/>
+                    <Button Click="Close_Application"  Content="Close application"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <Label x:Name="Race_Name" HorizontalAlignment="Center" VerticalAlignment="Center" Content="PlaceHolder" />
+    </Grid>
+</Window>

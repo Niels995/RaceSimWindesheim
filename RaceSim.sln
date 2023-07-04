@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceSim", "RaceSim\RaceSim.csproj", "{A2264D48-1D81-48D2-911C-34B5D1A8C933}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaceSim", "RaceSim\RaceSim.csproj", "{A2264D48-1D81-48D2-911C-34B5D1A8C933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{CFCF0D59-011A-428B-AE93-59491DD25437}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controller", "Controller\Controller.csproj", "{CFCF0D59-011A-428B-AE93-59491DD25437}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{0E9E0596-2D20-482A-933B-3BD297D348EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{0E9E0596-2D20-482A-933B-3BD297D348EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerTest", "ControllerTest\ControllerTest.csproj", "{7841C199-89BE-4228-BC1B-B97C19B6336D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControllerTest", "ControllerTest\ControllerTest.csproj", "{7841C199-89BE-4228-BC1B-B97C19B6336D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFWindow", "WPFWindow\WPFWindow.csproj", "{500282FA-2ECD-4339-B3D9-3E41FB2F25CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{7841C199-89BE-4228-BC1B-B97C19B6336D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7841C199-89BE-4228-BC1B-B97C19B6336D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7841C199-89BE-4228-BC1B-B97C19B6336D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{500282FA-2ECD-4339-B3D9-3E41FB2F25CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{500282FA-2ECD-4339-B3D9-3E41FB2F25CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{500282FA-2ECD-4339-B3D9-3E41FB2F25CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{500282FA-2ECD-4339-B3D9-3E41FB2F25CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

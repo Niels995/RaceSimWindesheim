@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Channels;
 using System.Xml.Linq;
+using WPFWindow;
+using Track = Model.Track;
 
 namespace RaceSim
 {
@@ -27,22 +29,18 @@ namespace RaceSim
             Data.CurrentRace = null;
             Data.NextRace();
             Console.Clear();
-
-            Console.WriteLine(Data.CurrentRace.Track.Name);
-            Visiualize.Initialize(Data.CurrentRace);
-
-            if (Data.CurrentRace != null)
+            if (Data.CurrentRace is not null)
             {
-                Data.CurrentRace.DriversChanged += (sender, e) =>
+                Console.WriteLine(Data.CurrentRace.Track.Name);
+                Visiualize.Initialize(Data.CurrentRace);
+
+                if (Data.CurrentRace != null)
                 {
-                    DrawTrack(e.track);
-                };
+                    Data.CurrentRace.DriversChanged += (sender, e) => { DrawTrack(e.track); };
 
 
-                Data.CurrentRace.DriversFinished += (sender, e) =>
-                {
-                    EventHandlerDriversFinished();
-                };
+                    Data.CurrentRace.DriversFinished += (sender, e) => { EventHandlerDriversFinished(); };
+                }
             }
         }
 

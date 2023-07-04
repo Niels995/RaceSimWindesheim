@@ -1,0 +1,31 @@
+﻿<Window x:Class="WPFWindow.Menu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFWindow"
+        mc:Ignorable="d"
+        Title="Menu" Height="450" Width="800">
+    <Grid>
+        <ListView x:Name="DriverList" HorizontalAlignment="Left" Height="214" Margin="10,52,0,0" VerticalAlignment="Top" Width="272" ItemsSource="{Binding Path=RaceDrivers}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Driver" DisplayMemberBinding="{Binding Path=Name}"/>
+                    <GridViewColumn Header="Points" DisplayMemberBinding="{Binding Path=Points}"/>
+                    <GridViewColumn Header="Color" DisplayMemberBinding="{Binding Path=TeamColor}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView x:Name="DriverInfo" HorizontalAlignment="Left" Height="214" Margin="311,52,0,0" VerticalAlignment="Top" Width="299" ItemsSource="{Binding Path=RaceDriversDriverInfo}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="LapCount" DisplayMemberBinding="{Binding Path=Laps}"/>
+                    <GridViewColumn Header="Quality" DisplayMemberBinding="{Binding Path=Quality}"/>
+                    <GridViewColumn Header="Performance" DisplayMemberBinding="{Binding Path=Performance}"/>
+                    <GridViewColumn Header="Speed" DisplayMemberBinding="{Binding Path=Speed}"/>
+                    <GridViewColumn Header="Broken" DisplayMemberBinding="{Binding Path=Broken}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+      </Grid>
+</Window>

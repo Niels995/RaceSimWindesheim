@@ -20,17 +20,19 @@ namespace Controller
         private Random _random { get; set; }
         private Dictionary<Section, SectionData> _positions { get; set; } = new Dictionary<Section, SectionData>();
         public int Rounds { get; set; } = 1;
-        private Timer _timer { get; set; }
+        public Timer _timer { get; set; } // public for testing
 
         public event EventHandler<DriversChangedEventArgs> DriversChanged;
 
         public event EventHandler<EventArgs> DriversFinished;
 
+        public event EventHandler<EventArgs> UpdateRace;
 
-        bool AllPlayersFinished = false;
+        public bool AllPlayersFinished = false;
 
         public Race(Track track, List<IParticipant> participants)
         {
+            StartTime = DateTime.Now;
             Track = track;
             Participants = participants;
             _random = new Random(DateTime.Now.Millisecond);
@@ -65,7 +67,7 @@ namespace Controller
             foreach (IParticipant par in Participants)
             {
                 par.Moved = false;
-                if (_random.Next(1, par.Quality) >= 5) {
+                if (_random.Next(3, par.Quality) >= 5) {
                     par.IsBroken = true;
                 }
                 if (par.IsBroken && _random.Next(1, 8) <= 2) { 
@@ -73,6 +75,7 @@ namespace Controller
                     RandomizeEquipment(par);
                 }
             }
+            
 
             Track _track = MovePlayers();
             DriversChanged?.Invoke(sender, new DriversChangedEventArgs() { track = Track });
@@ -81,30 +84,43 @@ namespace Controller
                 _timer?.Start();
             }
             else {
-                foreach (Delegate d in DriversChanged.GetInvocationList())
+                if (DriversChanged?.GetInvocationList() != null)
                 {
-                    DriversChanged -= (EventHandler<DriversChangedEventArgs>)d;
+                    foreach (Delegate d in DriversChanged.GetInvocationList())
+                    {
+                        DriversChanged -= (EventHandler<DriversChangedEventArgs>)d;
+                    }
                 }
                 DriversFinished?.Invoke(this, new EventArgs());
-                foreach (Delegate d in DriversFinished.GetInvocationList())
+                if (DriversFinished?.GetInvocationList() != null)
                 {
-                    DriversFinished -= (EventHandler<EventArgs>)d;
+                    foreach (Delegate d in DriversFinished.GetInvocationList())
+                    {
+                        DriversFinished -= (EventHandler<EventArgs>)d;
+                    }
                 }
+                UpdateRace?.Invoke(this, new EventArgs());
+                //if (UpdateRace?.GetInvocationList() != null)
+                //{
+                //    foreach (Delegate d in UpdateRace.GetInvocationList())
+                //    {
+                //        UpdateRace -= (EventHandler<EventArgs>)d;
+                //    }
+                //}
                 _timer?.Stop();
             }
         }
         public void RandomizeEquipment(IParticipant participant) { 
             participant.Performance = _random.Next(2, 10);
             participant.Speed = _random.Next(2, 6);
-            participant.Quality = _random.Next(40, 50);
+            participant.Quality = _random.Next(10, 50);
         }
         public Track MovePlayers() {
             Track _track = Track;
             int i = 0;
             foreach (Section sec in _track.Sections) {
                 SectionData CurrentSectionData = GetSectionData(sec);
-
-
+                
                 if (CurrentSectionData.Left != null) {
                     if (!CurrentSectionData.Left.IsBroken)
                     {
@@ -162,7 +178,8 @@ namespace Controller
                         if (par.Lapped == Rounds + 1)
                         {
                             NextSectionData.Left = null;
-                            foreach (IParticipant _participant in Participants) {
+                            foreach (IParticipant _participant in Participants)
+                            {
                                 if (_participant.Lapped != Rounds + 1)
                                 {
                                     AllPlayersFinished = false;
@@ -173,6 +190,12 @@ namespace Controller
                                     AllPlayersFinished = true;
                                 }
                             }
+                            int PointsRewarded = 1;
+                            foreach (IParticipant _participant in Participants)
+                            {
+                                if (_participant.Lapped != Rounds + 1) { PointsRewarded++; }
+                            }
+                            par.Points += PointsRewarded;
                         }
                     }
                 }
@@ -195,6 +218,12 @@ namespace Controller
                                     break;
                                 }
                             }
+                            int PointsRewarded = 1;
+                            foreach (IParticipant _participant in Participants)
+                            {
+                                if (_participant.Lapped != Rounds + 1) { PointsRewarded++; }
+                            }
+                            par.Points += PointsRewarded;
                         }
                     }
                 }
@@ -213,7 +242,7 @@ namespace Controller
                 }
             }
         }
-
+        // Wordt wel getest in Race_Test.cs bij PlaceParticipants_ParticipantsOnTrack()
         public void PlaceParticipants()
         {
             Stack<Section> _sections = new Stack<Section>();
@@ -233,9 +262,10 @@ namespace Controller
                 else if (CurrentSectionData.Right == null)
                 {
                     CurrentSectionData.Right = participant;
-                    CurrentSection = _sections.Pop();
-                } else {
-                    throw new Exception("Crash: Participant has no room");
+                    if (_sections.Count() != 0)
+                    {
+                        CurrentSection = _sections.Pop();
+                    }
                 }
             }
         }
