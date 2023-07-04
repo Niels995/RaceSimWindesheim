@@ -263,5 +263,19 @@ namespace ControllerTest
             Data.NextRace();
             Assert.IsNotNull(Data.CurrentRace);
         }
+
+        [Test]
+        public void MovePlayersALot()
+        {
+            int x = 0;
+            for (int i = 0; i < 2000; i++)
+            {
+                x++;
+                race.MovePlayers();
+            }
+
+            Assert.AreEqual(x, 2000);
+            Assert.IsNotNull(race);
+        }
         }
     }
